@@ -8,7 +8,6 @@ use toubeelib\core\repositoryInterfaces\PraticienRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\RdvRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\RepositoryEntityNotFoundException;
 use toubeelib\core\services\rdv\ServiceRdvInterface;
-use toubeelib\infrastructure\repositories\ArrayPraticienRepository;
 
 class ServiceRdv implements ServiceRdvInterface
 {
