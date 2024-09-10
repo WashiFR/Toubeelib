@@ -9,7 +9,7 @@ interface RdvRepositoryInterface
 {
 
     public function getRdvById(string $id): RendezVous;
-
     public function creerRendezVous(InputRdvDTO $rdv);
+    public function updateRdv(RendezVous $rdv): void;
 
 }

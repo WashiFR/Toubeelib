@@ -17,6 +17,7 @@ class RdvDTO extends DTO
     protected string $tel_praticien;
     protected string $ID_patient;
     protected string $date;
+    protected bool $estAnnule;
     protected string $specialite_label;
 
     public function __construct(RendezVous $rdv)
@@ -29,6 +30,7 @@ class RdvDTO extends DTO
         $this->tel_praticien = $rdv->praticien->tel;
         $this->ID_patient = $rdv->ID_patient;
         $this->date = $rdv->date;
+        $this->estAnnule = $rdv->estAnnule;
         $this->specialite_label = $rdv->specialite->label;
     }
 

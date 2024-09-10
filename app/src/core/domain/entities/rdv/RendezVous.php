@@ -13,6 +13,7 @@ class RendezVous extends Entity
     protected string $ID_patient;
     protected ?Specialite $specialite = null;
     protected string $date;
+    protected bool $estAnnule = false;
 
     public function __construct(string $ID_praticien, string $ID_patient, Specialite $specialite, string $date)
     {
@@ -20,6 +21,11 @@ class RendezVous extends Entity
         $this->ID_patient = $ID_patient;
         $this->specialite = $specialite;
         $this->date = $date;
+    }
+
+    public function annuler(): void
+    {
+        $this->estAnnule = true;
     }
 
     public function toDTO(): RdvDTO

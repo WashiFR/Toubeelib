@@ -44,4 +44,15 @@ class ServiceRdv implements ServiceRdvInterface
         $rdv = $this->rdvRepository->creerRendezVous($rdv);
         return new RdvDTO($rdv);
     }
+
+    public function annulerRendezVous(string $id): void
+    {
+        try {
+            $rdv = $this->rdvRepository->getRdvById($id);
+            $rdv->annuler();
+            $this->rdvRepository->updateRdv($rdv);
+        } catch(RepositoryEntityNotFoundException $e) {
+            throw new ServiceRdvInvalidDataException('invalid Rdv ID');
+        }
+    }
 }
