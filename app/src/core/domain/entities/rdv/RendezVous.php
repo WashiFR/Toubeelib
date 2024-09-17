@@ -11,11 +11,11 @@ class RendezVous extends Entity
 
     protected string $ID_praticien;
     protected string $ID_patient;
-    protected ?Specialite $specialite = null;
-    protected string $date;
+    protected string|null $specialite = null;
+    protected \DateTimeInterface $date;
     protected bool $estAnnule = false;
 
-    public function __construct(string $ID_praticien, string $ID_patient, Specialite $specialite, string $date)
+    public function __construct(string $ID_praticien, string $ID_patient, string $specialite, \DateTimeInterface $date)
     {
         $this->ID_praticien = $ID_praticien;
         $this->ID_patient = $ID_patient;
