@@ -40,6 +40,31 @@ class Praticien extends Entity
         return $this->specialite;
     }
 
+    public function getDisponibilites(): array
+    {
+        $disponibilites = [];
+        $date = new \DateTime();
+        $date = $date->setTime(self::HEURE_DEBUT, 0);
+        $date = $date->modify('+1 day');
+        while ($date->format('N') < 6) {
+            if ($date->format('N') === '7') {
+                $date = $date->modify('+1 day');
+                continue;
+            }
+            if ($date->format('H') < self::HEURE_DEBUT || $date->format('H') >= self::HEURE_FIN) {
+                $date = $date->modify('+1 hour');
+                continue;
+            }
+            if ($date->format('H') >= self::HEURE_PAUSE_DEBUT && $date->format('H') < self::HEURE_PAUSE_FIN) {
+                $date = $date->modify('+1 hour');
+                continue;
+            }
+            $disponibilites[] = $date;
+            $date = $date->modify('+'.self::DUREE_RDV.' minutes');
+        }
+        return $disponibilites;
+    }
+
     public function toDTO(): PraticienDTO
     {
         return new PraticienDTO($this);

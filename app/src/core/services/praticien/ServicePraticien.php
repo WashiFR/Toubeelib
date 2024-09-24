@@ -46,4 +46,15 @@ class ServicePraticien implements ServicePraticienInterface
             throw new ServicePraticienInvalidDataException('invalid Specialite ID');
         }
     }
+
+    public function getDisponibilites(string $id): array
+    {
+        try {
+            $praticien = $this->praticienRepository->getPraticienById($id);
+            $disponibilites = $praticien->getDisponibilites();
+            return $disponibilites;
+        } catch(RepositoryEntityNotFoundException $e) {
+            throw new ServicePraticienInvalidDataException('invalid Praticien ID');
+        }
+    }
 }
