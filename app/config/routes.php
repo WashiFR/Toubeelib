@@ -8,7 +8,12 @@ return function( \Slim\App $app):\Slim\App {
 
     $app->get('/', \toubeelib\application\actions\HomeAction::class);
 
-    $app->get('/rdv/{id}', \toubeelib\application\actions\GetRdvByIdAction::class);
+    // Affiche un rendez-vous
+    $app->get('/rdvs/{id}', \toubeelib\application\actions\GetRdvByIdAction::class)->setName('rdvs');
+    // TDOD : modifier un rendez-vous
+//    $app->put('/rdvs/{id}', \toubeelib\application\actions\PutRdvByIdAction::class);
+    // Crée un rendez-vous
+    $app->post('/rdvs', \toubeelib\application\actions\PostNewRdvAction::class);
 
     return $app;
 };

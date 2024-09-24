@@ -6,6 +6,7 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpNotFoundException;
 use toubeelib\application\actions\AbstractAction;
+use toubeelib\application\renderer\JsonRenderer;
 use toubeelib\core\repositoryInterfaces\PraticienRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\RdvRepositoryInterface;
 use toubeelib\core\services\rdv\ServiceRdv;
@@ -35,8 +36,9 @@ class GetRdvByIdAction extends AbstractAction
 
         $data = ['type' => 'ressource', 'rdv' => $rdv];
         $rs->getBody()->write(json_encode($data));
-        return $rs
-            ->withHeader('Content-Type', 'application/json')
-            ->withStatus(200);
+        return JsonRenderer::render($rs, 200, $data);
+//        return $rs
+//            ->withHeader('Content-Type', 'application/json')
+//            ->withStatus(200);
     }
 }
