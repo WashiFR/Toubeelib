@@ -7,14 +7,6 @@ use toubeelib\core\dto\PraticienDTO;
 
 class Praticien extends Entity
 {
-    // Constantes
-    public const DUREE_RDV = 30; // durée d'un rendez-vous en minutes
-    public const HEURE_DEBUT = 8; // heure de début de la journée de travail
-    public const HEURE_FIN = 17; // heure de fin de la journée de travail
-    public const HEURE_PAUSE_DEBUT = 12; // heure de début de la pause déjeuner
-    public const HEURE_PAUSE_FIN = 13; // heure de fin de la pause déjeuner
-    public const JOURS_TRAVAIL = [1, 2, 3, 4, 5]; // jours de travail : lundi à vendredi
-
     // Propriétés
     protected string $nom;
     protected string $prenom;
@@ -38,31 +30,6 @@ class Praticien extends Entity
     public function getSpecialite(): ?Specialite
     {
         return $this->specialite;
-    }
-
-    public function getDisponibilites(): array
-    {
-        $disponibilites = [];
-        $date = new \DateTime();
-        $date = $date->setTime(self::HEURE_DEBUT, 0);
-        $date = $date->modify('+1 day');
-        while ($date->format('N') < 6) {
-            if ($date->format('N') === '7') {
-                $date = $date->modify('+1 day');
-                continue;
-            }
-            if ($date->format('H') < self::HEURE_DEBUT || $date->format('H') >= self::HEURE_FIN) {
-                $date = $date->modify('+1 hour');
-                continue;
-            }
-            if ($date->format('H') >= self::HEURE_PAUSE_DEBUT && $date->format('H') < self::HEURE_PAUSE_FIN) {
-                $date = $date->modify('+1 hour');
-                continue;
-            }
-            $disponibilites[] = $date;
-            $date = $date->modify('+'.self::DUREE_RDV.' minutes');
-        }
-        return $disponibilites;
     }
 
     public function toDTO(): PraticienDTO

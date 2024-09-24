@@ -11,6 +11,13 @@ use toubeelib\core\services\rdv\ServiceRdvInterface;
 
 class ServiceRdv implements ServiceRdvInterface
 {
+    //constantes
+    public const DUREE_RDV = 30; // durée d'un rendez-vous en minutes
+    public const HEURE_DEBUT = 8; // heure de début de la journée de travail
+    public const HEURE_FIN = 17; // heure de fin de la journée de travail
+    public const HEURE_PAUSE_DEBUT = 12; // heure de début de la pause déjeuner
+    public const HEURE_PAUSE_FIN = 13; // heure de fin de la pause déjeuner
+    public const JOURS_TRAVAIL = [1, 2, 3, 4, 5]; // jours de travail : lundi à vendredi
 
     private PraticienRepositoryInterface $praticienRepository;
     private RdvRepositoryInterface $rdvRepository;
@@ -53,5 +60,43 @@ class ServiceRdv implements ServiceRdvInterface
         } catch(RepositoryEntityNotFoundException $e) {
             throw new ServiceRdvInvalidDataException('invalid Rdv ID');
         }
+    }
+
+    public function getDisponibilitesPraticien(string $id): array
+    {
+        // On remplit un tableau qui contient tous les créneaux
+        while ($date->format('N') < 6) {
+            if ($date->format('N') === '7') {
+                $date = $date->modify('+1 day');
+                continue;
+            }
+            if ($date->format('H') < self::HEURE_DEBUT || $date->format('H') >= self::HEURE_FIN) {
+                $date = $date->modify('+1 hour');
+                continue;
+            }
+            if ($date->format('H') >= self::HEURE_PAUSE_DEBUT && $date->format('H') < self::HEURE_PAUSE_FIN) {
+                $date = $date->modify('+1 hour');
+                continue;
+            }
+            $disponibilites[] = $date;
+            $date = $date->modify('+'.self::DUREE_RDV.' minutes');
+        }
+
+        // On retire les créneaux déjà occupés
+        $praticien = $this->praticienRepository->getPraticienById($id);
+        $rdvs = [];
+        foreach ($rdvs as $rdv) {
+            $date = $rdv->getDate();
+            $key = array_search($date, $disponibilites);
+            if ($key !== false) {
+                unset($disponibilites[$key]);
+            }
+        }
+
+        return $disponibilites;
+    }
+
+    public function modifierSpecialiteRendezVous(string $id, ) : void{
+
     }
 }
