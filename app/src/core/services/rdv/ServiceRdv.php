@@ -64,6 +64,7 @@ class ServiceRdv implements ServiceRdvInterface
 
     public function getDisponibilitesPraticien(string $id): array
     {
+        try{
         // On remplit un tableau qui contient tous les créneaux
         while ($date->format('N') < 6) {
             if ($date->format('N') === '7') {
@@ -93,9 +94,28 @@ class ServiceRdv implements ServiceRdvInterface
         }
 
         return $disponibilites;
+        } catch(RepositoryEntityNotFoundException $e) {
+            throw new ServiceRdvInvalidDataException('invalid Praticien ID');
+        }
     }
 
-    public function modifierSpecialiteRendezVous(string $id, ) : void{
+    public function modifierSpecialiteRendezVous(string $id, string $specialite) : void{
+        try {
+            $rdv = $this->rdvRepository->getRdvById($id);
+            $rdv->setSpecialite($specialite);
+            $this->rdvRepository->updateRdv($rdv);
+        } catch (RepositoryEntityNotFoundException $e){
+            throw new ServiceRdvInvalidDataException('invalid Rdv ID');
+        }
+    }
 
+    public function modifierPatientRendezVous(string $id, string $ID_patient) : void{
+        try {
+            $rdv = $this->rdvRepository->getRdvById($id);
+            $rdv->setID_patient($ID_patient);
+            $this->rdvRepository->updateRdv($rdv);
+        } catch (RepositoryEntityNotFoundException $e){
+            throw new ServiceRdvInvalidDataException('invalid Rdv ID');
+        }
     }
 }

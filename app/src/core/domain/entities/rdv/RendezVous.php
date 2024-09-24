@@ -33,4 +33,14 @@ class RendezVous extends Entity
         return new RdvDTO($this);
     }
 
+    public function setID_patient(string $ID_patient)
+    {
+        $this->ID_patient = $ID_patient;
+    }
+
+    public function setSpecialite(string $specialite)
+    {
+        $this->specialite = $specialite;
+    }
+
 }
