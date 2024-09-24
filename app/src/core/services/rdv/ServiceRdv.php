@@ -83,8 +83,7 @@ class ServiceRdv implements ServiceRdvInterface
         }
 
         // On retire les créneaux déjà occupés
-        $praticien = $this->praticienRepository->getPraticienById($id);
-        $rdvs = [];
+        $rdvs = $this->rdvRepository->getRdvsByPraticienId($id);
         foreach ($rdvs as $rdv) {
             $date = $rdv->getDate();
             $key = array_search($date, $disponibilites);

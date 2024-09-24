@@ -44,4 +44,15 @@ class ArrayRdvRepository implements RdvRepositoryInterface
     {
         $this->rdvs[$rdv->getID()] = $rdv;
     }
+
+    public function getRdvsByPraticienId(string $id): array
+    {
+        $rdvs = [];
+        foreach ($this->rdvs as $rdv) {
+            if ($rdv->getID_praticien() === $id) {
+                $rdvs[] = $rdv;
+            }
+        }
+        return $rdvs;
+    }
 }
