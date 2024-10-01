@@ -8,7 +8,6 @@ use toubeelib\core\dto\RdvDTO;
 
 class RendezVous extends Entity
 {
-
     protected string $ID_praticien;
     protected string $ID_patient;
     protected string|null $specialite = null;

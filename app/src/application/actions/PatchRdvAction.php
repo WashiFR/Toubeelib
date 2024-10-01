@@ -8,12 +8,10 @@ use Respect\Validation\Validator;
 use Slim\Exception\HttpBadRequestException;
 use Slim\Routing\RouteContext;
 use toubeelib\application\actions\AbstractAction;
-use toubeelib\application\renderer\JsonRenderer;
-use toubeelib\core\dto\InputRdvDTO;
 use toubeelib\core\services\rdv\ServiceRdvInterface;
 use toubeelib\core\services\rdv\ServiceRdvInvalidDataException;
 
-class PostNewRdvAction extends AbstractAction
+class PatchRdvAction extends AbstractAction
 {
     private ServiceRdvInterface $rdv_service;
 
@@ -26,11 +24,8 @@ class PostNewRdvAction extends AbstractAction
     {
         $data = $rq->getParsedBody();
 
-        // Validation des données
-        $rdvInputValidator = Validator::key('id_praticien', Validator::intVal()->notEmpty())
-            ->key('id_patient', Validator::intVal()->notEmpty())
-            ->key('specialite', Validator::stringType()->notEmpty())
-            ->key('date', Validator::dateTime()->notEmpty());
+        $rdvInputValidator = Validator::key('specialite', Validator::stringType())
+            ->key('id_patient', Validator::intVal());
 
         try {
             $rdvInputValidator->assert($data);
@@ -38,19 +33,32 @@ class PostNewRdvAction extends AbstractAction
             throw new HttpBadRequestException($rq, $e->getFullMessage());
         }
 
-        // Création du input DTO
-        $input_rdv = new InputRdvDTO($data['id_praticien'], $data['id_patient'], $data['specialite'], $data['date']);
+        // Modification du rendez-vous et gestion des erreurs
+        if (isset($data['specialite'])) {
+            try {
+                $this->rdv_service->modifierSpecialiteRendezVous($args['id'], $data['specialite']);
+            } catch (ServiceRdvInvalidDataException $e) {
+                throw new HttpBadRequestException($rq, $e->getMessage());
+            }
+        }
+        if (isset($data['id_patient'])) {
+            try {
+                $this->rdv_service->modifierPatientRendezVous($args['id'], $data['id_patient']);
+            } catch(ServiceRdvInvalidDataException $e) {
+                throw new HttpBadRequestException($rq, $e->getMessage());
+            }
+        }
 
-        // Création du rendez-vous et gestion des erreurs
+        // Récupération du rendez-vous
         try {
-            $rdv = $this->rdv_service->creerRendezVous($input_rdv);
+            $rdv = $this->rdv_service->getRdvById($args['id']);
         } catch(ServiceRdvInvalidDataException $e) {
             throw new HttpBadRequestException($rq, $e->getMessage());
         }
 
         $rs->getBody()->write(json_encode($rdv));
 
-        // Redirection vers la ressource créée
+        // Redirection vers la ressource modifiée
         $routeContext = RouteContext::fromRequest($rq);
         $url = $routeContext->getRouteParser()->urlFor('rdvs', ['id' => $rdv->id]);
 

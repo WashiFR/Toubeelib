@@ -10,8 +10,8 @@ return function( \Slim\App $app):\Slim\App {
 
     // Affiche un rendez-vous
     $app->get('/rdvs/{id}', \toubeelib\application\actions\GetRdvByIdAction::class)->setName('rdvs');
-    // TDOD : modifier un rendez-vous
-//    $app->put('/rdvs/{id}', \toubeelib\application\actions\PutRdvByIdAction::class);
+    // Modifier un rendez-vous
+    $app->patch('/rdvs/{id}', \toubeelib\application\actions\PatchRdvAction::class);
     // Crée un rendez-vous
     $app->post('/rdvs', \toubeelib\application\actions\PostNewRdvAction::class);
 

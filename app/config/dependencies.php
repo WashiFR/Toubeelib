@@ -2,6 +2,7 @@
 
 use Psr\Container\ContainerInterface;
 use toubeelib\application\actions\GetRdvByIdAction;
+use toubeelib\application\actions\PatchRdvAction;
 use toubeelib\application\actions\PostNewRdvAction;
 use toubeelib\core\repositoryInterfaces\PraticienRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\RdvRepositoryInterface;
@@ -35,6 +36,12 @@ return [
 
     PostNewRdvAction::class => function (ContainerInterface $c) {
         return new PostNewRdvAction(
+            $c->get(ServiceRdvInterface::class),
+        );
+    },
+
+    PatchRdvAction::class => function (ContainerInterface $c) {
+        return new PatchRdvAction(
             $c->get(ServiceRdvInterface::class),
         );
     }
