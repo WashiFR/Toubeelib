@@ -15,6 +15,8 @@ class RendezVous extends Entity
     protected \DateTimeInterface $date;
     protected bool $estAnnule = false;
 
+    protected string $statut = "prévu";
+
     public function __construct(string $ID_praticien, string $ID_patient, string $specialite, \DateTimeInterface $date)
     {
         $this->ID_praticien = $ID_praticien;
@@ -26,6 +28,16 @@ class RendezVous extends Entity
     public function annuler(): void
     {
         $this->estAnnule = true;
+        $this->statut = "annulé";
+    }
+
+    public function updateStatut(bool $estHonore): void
+    {
+        if ($estHonore) {
+            $this->statut = "honoré";
+        } else {
+            $this->statut = "non honoré";
+        };
     }
 
     public function toDTO(): RdvDTO
