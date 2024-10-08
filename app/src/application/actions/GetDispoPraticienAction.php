@@ -6,16 +6,10 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Slim\Exception\HttpNotFoundException;
 use toubeelib\application\actions\AbstractAction;
-use toubeelib\application\renderer\JsonRenderer;
-use toubeelib\core\repositoryInterfaces\PraticienRepositoryInterface;
-use toubeelib\core\repositoryInterfaces\RdvRepositoryInterface;
-use toubeelib\core\services\rdv\ServiceRdv;
 use toubeelib\core\services\rdv\ServiceRdvInterface;
 use toubeelib\core\services\rdv\ServiceRdvInvalidDataException;
-use toubeelib\infrastructure\repositories\ArrayPraticienRepository;
-use toubeelib\infrastructure\repositories\ArrayRdvRepository;
 
-class GetRdvByIdAction extends AbstractAction
+class GetDispoPraticienAction extends AbstractAction
 {
     private ServiceRdvInterface $rdv_service;
 
@@ -29,14 +23,14 @@ class GetRdvByIdAction extends AbstractAction
         $id = $args['id'];
 
         try {
-            $rdv = $this->rdv_service->getRdvById($id);
+            $rdv = $this->rdv_service->getDisponibilitesPraticien($id);
         } catch(ServiceRdvInvalidDataException $e) {
             throw new HttpNotFoundException($rq, $e->getMessage());
         }
 
         $data = ['type' => 'ressource', 'rdv' => $rdv];
         $rs->getBody()->write(json_encode($data));
-//        return JsonRenderer::render($rs, 200, $data);
+
         return $rs
             ->withHeader('Content-Type', 'application/json')
             ->withStatus(200);

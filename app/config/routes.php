@@ -12,8 +12,13 @@ return function( \Slim\App $app):\Slim\App {
     $app->get('/rdvs/{id}', \toubeelib\application\actions\GetRdvByIdAction::class)->setName('rdvs');
     // Modifier un rendez-vous
     $app->patch('/rdvs/{id}', \toubeelib\application\actions\PatchRdvAction::class);
+    // Annuler un rendez-vous
+    $app->delete('/rdvs/{id}', \toubeelib\application\actions\AnnulerRdvAction::class);
     // Crée un rendez-vous
     $app->post('/rdvs', \toubeelib\application\actions\PostNewRdvAction::class);
+
+    // Affiche les disponibilités d'un praticien
+    $app->get('/praticiens/{id}/dispo', \toubeelib\application\actions\GetDispoPraticienAction::class)->setName('dispo');
 
     return $app;
 };

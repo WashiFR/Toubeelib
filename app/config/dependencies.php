@@ -1,6 +1,8 @@
 <?php
 
 use Psr\Container\ContainerInterface;
+use toubeelib\application\actions\AnnulerRdvAction;
+use toubeelib\application\actions\GetDispoPraticienAction;
 use toubeelib\application\actions\GetRdvByIdAction;
 use toubeelib\application\actions\PatchRdvAction;
 use toubeelib\application\actions\PostNewRdvAction;
@@ -44,6 +46,18 @@ return [
         return new PatchRdvAction(
             $c->get(ServiceRdvInterface::class),
         );
-    }
+    },
+
+    AnnulerRdvAction::class => function (ContainerInterface $c) {
+        return new AnnulerRdvAction(
+            $c->get(ServiceRdvInterface::class),
+        );
+    },
+
+    GetDispoPraticienAction::class => function (ContainerInterface $c) {
+        return new GetDispoPraticienAction(
+            $c->get(ServiceRdvInterface::class),
+        );
+    },
 
 ];
