@@ -30,13 +30,9 @@ class RendezVous extends Entity
         $this->statut = "annulé";
     }
 
-    public function updateStatut(bool $estHonore): void
+    public function updateStatut(string $newStatut): void
     {
-        if ($estHonore) {
-            $this->statut = "honoré";
-        } else {
-            $this->statut = "non honoré";
-        };
+        $this->statut = $newStatut;
     }
 
     public function toDTO(): RdvDTO
