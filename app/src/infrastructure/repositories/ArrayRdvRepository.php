@@ -45,11 +45,11 @@ class ArrayRdvRepository implements RdvRepositoryInterface
         $this->rdvs[$rdv->getID()] = $rdv;
     }
 
-    public function getRdvsByPraticienId(string $id): array
+    public function getRdvsByPraticienId(string $id, \DateTime $fromDate, \DateTime $toDate): array
     {
         $rdvs = [];
         foreach ($this->rdvs as $rdv) {
-            if ($rdv->getID_praticien() === $id) {
+            if ($rdv->getID_praticien() === $id && $rdv->getDate() >= $fromDate && $rdv->getDate() <= $toDate) {
                 $rdvs[] = $rdv;
             }
         }

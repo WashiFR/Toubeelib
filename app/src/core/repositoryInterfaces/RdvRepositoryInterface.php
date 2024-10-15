@@ -12,6 +12,6 @@ interface RdvRepositoryInterface
     public function creerRendezVous(InputRdvDTO $rdv);
     public function updateRdv(RendezVous $rdv): void;
 
-    public function getRdvsByPraticienId(string $id): array;
+    public function getRdvsByPraticienId(string $id, \DateTime $fromDate, \DateTime $toDate): array;
 
 }

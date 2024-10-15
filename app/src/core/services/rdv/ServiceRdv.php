@@ -2,6 +2,7 @@
 
 namespace toubeelib\core\services\rdv;
 
+use DateTime;
 use toubeelib\core\dto\RdvDTO;
 use toubeelib\core\dto\InputRdvDTO;
 use toubeelib\core\repositoryInterfaces\PraticienRepositoryInterface;
@@ -62,29 +63,27 @@ class ServiceRdv implements ServiceRdvInterface
         }
     }
 
-    public function getDisponibilitesPraticien(string $id): array
+    public function getDisponibilitesPraticien(string $id, DateTime $fromDate, DateTime $toDate): array
     {
         try{
-        // On remplit un tableau qui contient tous les créneaux
-        while ($date->format('N') < 6) {
-            if ($date->format('N') === '7') {
-                $date = $date->modify('+1 day');
-                continue;
+        // On remplit un tableau qui contient tous les créneaux de la datedebut à la datefin, en fonction des jours de travail
+        $disponibilites = [];
+        $date = clone $fromDate;
+        while ($date <= $toDate) {
+            if (in_array($date->format('N'), self::JOURS_TRAVAIL)) {
+                $heure = self::HEURE_DEBUT;
+                while ($heure < self::HEURE_FIN) {
+                    if (!($date->format('H') === self::HEURE_PAUSE_DEBUT && $heure >= self::HEURE_PAUSE_DEBUT && $heure < self::HEURE_PAUSE_FIN)) {
+                        $disponibilites[] = clone $date->setTime($heure, 0);
+                    }
+                    $heure += self::DUREE_RDV / 60;
+                }
             }
-            if ($date->format('H') < self::HEURE_DEBUT || $date->format('H') >= self::HEURE_FIN) {
-                $date = $date->modify('+1 hour');
-                continue;
-            }
-            if ($date->format('H') >= self::HEURE_PAUSE_DEBUT && $date->format('H') < self::HEURE_PAUSE_FIN) {
-                $date = $date->modify('+1 hour');
-                continue;
-            }
-            $disponibilites[] = $date;
-            $date = $date->modify('+'.self::DUREE_RDV.' minutes');
+            $date->modify('+1 day');
         }
 
         // On retire les créneaux déjà occupés
-        $rdvs = $this->rdvRepository->getRdvsByPraticienId($id);
+        $rdvs = $this->rdvRepository->getRdvsByPraticienId($id, $fromDate, $toDate);
         foreach ($rdvs as $rdv) {
             $date = $rdv->getDate();
             $key = array_search($date, $disponibilites);
