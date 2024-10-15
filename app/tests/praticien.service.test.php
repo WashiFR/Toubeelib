@@ -2,7 +2,7 @@
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
-$service = new toubeelib\core\services\praticien\ServicePraticien(new \toubeelib\infrastructure\repositories\ArrayPraticienRepository());
+$service = new toubeelib\core\services\praticien\ServicePraticien(new \toubeelib\infrastructure\repositories\PDOPraticienRepository());
 
 $pdto = new \toubeelib\core\dto\InputPraticienDTO('néplin', 'jean', 'vandeuve', '06 07 08 09 11', 'A');
 $pdto2 = new \toubeelib\core\dto\InputPraticienDTO('némar', 'jean', 'lassou', '06 07 08 09 12', 'B');

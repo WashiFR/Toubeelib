@@ -2,13 +2,14 @@
 
 namespace toubeelib\infrastructure\repositories;
 
+use PDO;
 use Ramsey\Uuid\Uuid;
 use toubeelib\core\domain\entities\praticien\Praticien;
 use toubeelib\core\domain\entities\praticien\Specialite;
 use toubeelib\core\repositoryInterfaces\PraticienRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\RepositoryEntityNotFoundException;
 
-class ArrayPraticienRepository implements PraticienRepositoryInterface
+class PDOPraticienRepository implements PraticienRepositoryInterface
 {
 
     const SPECIALITES = [
@@ -42,18 +43,13 @@ class ArrayPraticienRepository implements PraticienRepositoryInterface
     private array $praticiens = [];
 
     public function __construct() {
-        $this->praticiens['p1'] = new Praticien( 'Dupont', 'Jean', 'nancy', '0123456789');
-        $this->praticiens['p1']->setSpecialite(new Specialite('A', 'Dentiste', 'Spécialiste des dents'));
-        $this->praticiens['p1']->setID('p1');
-
-        $this->praticiens['p2'] = new Praticien( 'Durand', 'Pierre', 'vandeuve', '0123456789');
-        $this->praticiens['p2']->setSpecialite(new Specialite('B', 'Ophtalmologue', 'Spécialiste des yeux'));
-        $this->praticiens['p2']->setID('p2');
-
-        $this->praticiens['p3'] = new Praticien( 'Martin', 'Marie', '3lassou', '0123456789');
-        $this->praticiens['p3']->setSpecialite(new Specialite('C', 'Généraliste', 'Médecin généraliste'));
-        $this->praticiens['p3']->setID('p3');
-
+        $dataCredentials = parse_ini_file(__DIR__ . 'toubeelibdb.env.dist');
+        $data = new PDO('postgres:host=localhost;dbname=toubeelib', $dataCredentials["POSTGRES_USER"], $dataCredentials["POSTGRES_PASSWORD"]);
+        $stmt = $data->query('SELECT * FROM USERS where role = 10');
+        $praticiens = $stmt->fetchAll();
+        foreach ($praticiens as $praticien) {
+            $this->praticiens[$praticien['ID']] = new Praticien($praticien['ID'], $praticien['nom'], $praticien['prenom'], $praticien['specialite']);
+        }
     }
     public function getSpecialiteById(string $id): Specialite
     {

@@ -10,13 +10,13 @@ use toubeelib\core\repositoryInterfaces\PraticienRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\RdvRepositoryInterface;
 use toubeelib\core\services\rdv\ServiceRdv;
 use toubeelib\core\services\rdv\ServiceRdvInterface;
-use toubeelib\infrastructure\repositories\ArrayPraticienRepository;
+use toubeelib\infrastructure\repositories\PDOPraticienRepository;
 use toubeelib\infrastructure\repositories\ArrayRdvRepository;
 
 return [
 
     PraticienRepositoryInterface::class => function (ContainerInterface $c) {
-        return new ArrayPraticienRepository();
+        return new PDOPraticienRepository();
     },
 
     RdvRepositoryInterface::class => function (ContainerInterface $c) {

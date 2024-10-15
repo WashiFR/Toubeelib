@@ -12,7 +12,7 @@ use toubeelib\core\repositoryInterfaces\RdvRepositoryInterface;
 use toubeelib\core\services\rdv\ServiceRdv;
 use toubeelib\core\services\rdv\ServiceRdvInterface;
 use toubeelib\core\services\rdv\ServiceRdvInvalidDataException;
-use toubeelib\infrastructure\repositories\ArrayPraticienRepository;
+use toubeelib\infrastructure\repositories\PDOPraticienRepository;
 use toubeelib\infrastructure\repositories\ArrayRdvRepository;
 
 class GetRdvByIdAction extends AbstractAction
