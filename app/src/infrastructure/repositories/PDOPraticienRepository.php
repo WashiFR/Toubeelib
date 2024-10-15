@@ -57,4 +57,9 @@ class PDOPraticienRepository implements PraticienRepositoryInterface
         return $praticien;
     }
 
+    public function getAllPraticiens(): array
+    {
+        return $this->praticiens;
+    }
+
 }
