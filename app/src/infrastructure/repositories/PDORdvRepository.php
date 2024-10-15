@@ -55,4 +55,15 @@ class PDORdvRepository implements RdvRepositoryInterface
         }
         return $rdvs;
     }
+
+    public function getRdvsByPatientId(string $id): array
+    {
+        $rdvs = [];
+        foreach ($this->rdvs as $rdv) {
+            if ($rdv->getID_patient() === $id) {
+                $rdvs[] = $rdv;
+            }
+        }
+        return $rdvs;
+    }
 }

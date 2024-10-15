@@ -98,6 +98,15 @@ class ServiceRdv implements ServiceRdvInterface
         }
     }
 
+    public function getPatientRdvs(string $id): array
+    {
+        try {
+            return $this->rdvRepository->getRdvsByPatientId($id);
+        } catch(RepositoryEntityNotFoundException $e) {
+            throw new ServiceRdvInvalidDataException('invalid Patient ID');
+        }
+    }
+
     public function modifierSpecialiteRendezVous(string $id, string $specialite) : void{
         try {
             $rdv = $this->rdvRepository->getRdvById($id);
