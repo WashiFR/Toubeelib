@@ -20,5 +20,8 @@ return function( \Slim\App $app):\Slim\App {
     // Affiche les disponibilités d'un praticien
     $app->get('/praticiens/{id}/dispo', \toubeelib\application\actions\GetDispoPraticienAction::class)->setName('dispo');
 
+    // S'authentifier
+    $app->post('/signin', \toubeelib\application\actions\PostSigninAction::class)->setName('signin');
+
     return $app;
 };
