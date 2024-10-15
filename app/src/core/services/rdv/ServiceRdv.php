@@ -47,6 +47,10 @@ class ServiceRdv implements ServiceRdvInterface
             throw new ServiceRdvInvalidDataException('invalid specialite');
         }
         // TODO : vérifier si le praticien est disponible à la date demandée
+        $this->rdvRepository->getRdvsByPraticienId($rdv->getID_praticien(), $rdv->getDate(), $rdv->getDate());
+        if($this->rdvRepository->getRdvsByPraticienId($rdv->getID_praticien(), $rdv->getDate(), $rdv->getDate()) !== null){
+            throw new ServiceRdvInvalidDataException('Praticien non disponible');
+        }
 
         $rdv = $this->rdvRepository->creerRendezVous($rdv);
         return new RdvDTO($rdv);
