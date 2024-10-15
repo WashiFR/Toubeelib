@@ -2,25 +2,25 @@
 
 namespace toubeelib\infrastructure\repositories;
 
+use PDO;
 use Ramsey\Uuid\Uuid;
 use toubeelib\core\domain\entities\rdv\RendezVous;
 use toubeelib\core\dto\InputRdvDTO;
 use toubeelib\core\repositoryInterfaces\RdvRepositoryInterface;
 use toubeelib\core\repositoryInterfaces\RepositoryEntityNotFoundException;
 
-class ArrayRdvRepository implements RdvRepositoryInterface
+class PDORdvRepository implements RdvRepositoryInterface
 {
     private array $rdvs = [];
 
     public function __construct() {
-            $r1 = new RendezVous('p1', 'pa1', 'A', \DateTimeImmutable::createFromFormat('Y-m-d H:i','2024-09-02 09:00') );
-            $r1->setID('r1');
-            $r2 = new RendezVous('p1', 'pa1', 'A', \DateTimeImmutable::createFromFormat('Y-m-d H:i','2024-09-02 10:00'));
-            $r2->setID('r2');
-            $r3 = new RendezVous('p2', 'pa1', 'A', \DateTimeImmutable::createFromFormat('Y-m-d H:i','2024-09-02 09:30'));
-            $r3->setID('r3');
-
-        $this->rdvs  = ['r1'=> $r1, 'r2'=>$r2, 'r3'=> $r3 ];
+        $dbCredentials = parse_ini_file(__DIR__ . 'toubeelibdb.env.dist');
+        $data = new PDO('postgres:host=localhost;dbname=toubeelib', $dbCredentials["POSTGRES_USER"], $dbCredentials["POSTGRES_PASSWORD"]);
+        $stmt = $data->query('SELECT * FROM RDVS');
+        $rdvs = $stmt->fetchAll();
+        foreach ($rdvs as $rdv) {
+            $this->rdvs[$rdv['ID']] = new RendezVous($rdv['ID_praticien'], $rdv['ID_patient'], $rdv['id_specialite'], $rdv['daterdv']);
+        }
     }
 
 

@@ -12,33 +12,7 @@ use toubeelib\core\repositoryInterfaces\RepositoryEntityNotFoundException;
 class PDOPraticienRepository implements PraticienRepositoryInterface
 {
 
-    const SPECIALITES = [
-        'A' => [
-            'ID' => 'A',
-            'label' => 'Dentiste',
-            'description' => 'Spécialiste des dents'
-        ],
-        'B' => [
-            'ID' => 'B',
-            'label' => 'Ophtalmologue',
-            'description' => 'Spécialiste des yeux'
-        ],
-        'C' => [
-            'ID' => 'C',
-            'label' => 'Généraliste',
-            'description' => 'Médecin généraliste'
-        ],
-        'D' => [
-            'ID' => 'D',
-            'label' => 'Pédiatre',
-            'description' => 'Médecin pour enfants'
-        ],
-        'E' => [
-            'ID' => 'E',
-            'label' => 'Médecin du sport',
-            'description' => 'Maladies et trausmatismes liés à la pratique sportive'
-        ],
-    ];
+    private array $specialites = [];
 
     private array $praticiens = [];
 
@@ -48,13 +22,19 @@ class PDOPraticienRepository implements PraticienRepositoryInterface
         $stmt = $data->query('SELECT * FROM USERS where role = 10');
         $praticiens = $stmt->fetchAll();
         foreach ($praticiens as $praticien) {
-            $this->praticiens[$praticien['ID']] = new Praticien($praticien['ID'], $praticien['nom'], $praticien['prenom'], $praticien['specialite']);
+            $this->praticiens[$praticien['ID']] = new Praticien($praticien['ID'], $praticien['nom'], $praticien['prenom'], $praticien['tel']);
+        }
+
+        $stmt = $data->query('SELECT * FROM SPECIALITES');
+        $specialites = $stmt->fetchAll();
+        foreach ($specialites as $specialite) {
+            $this->specialites[$specialite['ID']] = new Specialite($specialite['ID'], $specialite['label'], $specialite['description']);
         }
     }
     public function getSpecialiteById(string $id): Specialite
     {
 
-        $specialite = self::SPECIALITES[$id] ??
+        $specialite = $this->specialites[$id] ??
             throw new RepositoryEntityNotFoundException("Specialite $id not found") ;
 
         return new Specialite($specialite['ID'], $specialite['label'], $specialite['description']);

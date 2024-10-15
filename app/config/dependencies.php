@@ -11,7 +11,7 @@ use toubeelib\core\repositoryInterfaces\RdvRepositoryInterface;
 use toubeelib\core\services\rdv\ServiceRdv;
 use toubeelib\core\services\rdv\ServiceRdvInterface;
 use toubeelib\infrastructure\repositories\PDOPraticienRepository;
-use toubeelib\infrastructure\repositories\ArrayRdvRepository;
+use toubeelib\infrastructure\repositories\PDORdvRepository;
 
 return [
 
@@ -20,7 +20,7 @@ return [
     },
 
     RdvRepositoryInterface::class => function (ContainerInterface $c) {
-        return new ArrayRdvRepository();
+        return new PDORdvRepository();
     },
 
     ServiceRdvInterface::class => function (ContainerInterface $c) {
