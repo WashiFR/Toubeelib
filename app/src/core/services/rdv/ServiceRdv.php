@@ -130,4 +130,6 @@ class ServiceRdv implements ServiceRdvInterface
             throw new ServiceRdvInvalidDataException('invalid Rdv ID');
         }
     }
+
+    
 }

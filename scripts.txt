@@ -1,0 +1,26 @@
+create table specialite(
+    id varchar primary key,
+    label varchar,
+    description varchar
+);
+
+create table specialitepraticien(
+    id_praticien uuid,
+    id_specialite varchar,
+    primary key(id_praticien, id_specialite),
+    foreign key(id_praticien) references users(id),
+    foreign key(id_specialite) references specialite(id)
+);
+
+create table rdv(
+    id varchar primary key,
+    id_praticien uuid,
+    id_specialite varchar,
+    id_patient uuid,
+    daterdv date,
+    estAnnule bool,
+    statut varchar,
+    foreign key(id_praticien) references users(id),
+    foreign key(id_specialite) references specialite(id),
+    foreign key(id_patient) references users(id)
+);
