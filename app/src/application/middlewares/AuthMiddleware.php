@@ -2,34 +2,42 @@
 
 namespace toubeelib\application\middlewares;
 
-use Firebase\JWT\BeforeValidException;
+
+use nrv\application\providers\AuthnProviderInterface;
 use Firebase\JWT\ExpiredException;
 use Firebase\JWT\SignatureInvalidException;
-use Psr\Http\Message\ResponseInterface as Response;
+use Firebase\JWT\BeforeValidException;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use toubeelib\application\providers\auth\AuthProviderInterface;
+use Psr\Http\Server\RequestHandlerInterface;
+use Slim\Psr7\Response;
 
-class AuthMiddleware
+
+class AuthnMiddleware
 {
-    private AuthProviderInterface $authProvider;
+    private AuthnProviderInterface $authProvider;
 
-    public function __construct(AuthProviderInterface $authProvider)
+    public function __construct(AuthnProviderInterface $authProvider)
     {
         $this->authProvider = $authProvider;
     }
 
-    public function __invoke(Request $rq, callable $next) : Response
+    public function __invoke(Request $rq, RequestHandlerInterface $handler) : Response
     {
         try {
-            $token = $rq->getHeader('Authorization')[0];
-            $tokenstring = sscanf($token, 'Bearer %s')[0];
+            try{
+                $token = $rq->getHeader('Authorization')[0];
+                $tokenstring = sscanf($token, 'Bearer %s')[0];
+            }catch (\Exception $e){
+                return (new Response())->withStatus(401);
+            }
+
             $authDTO = $this->authProvider->getSignedInUser($tokenstring);
         } catch (ExpiredException|\UnexpectedValueException|BeforeValidException|SignatureInvalidException $e) {
-            return $next($rq)->withStatus(401);
+            return (new Response())->withStatus(401);
         }
 
         $rq = $rq->withAttribute('auth', $authDTO);
 
-        return $next($rq);
+        return $handler->handle($rq);
     }
 }
